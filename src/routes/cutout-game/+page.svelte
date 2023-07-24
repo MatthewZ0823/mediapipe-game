@@ -1,7 +1,9 @@
 <script lang="ts">
-	import WebcamPoseLandmarker from "$lib/components/WebcamPoseLandmarker.svelte";
+	import SegTest from "$lib/components/SegTest.svelte";
+import WebcamPoseLandmarker from "$lib/components/WebcamPoseLandmarker.svelte";
 	import WebcamSegmenter from "$lib/components/WebcamSegmenter.svelte";
 </script>
 
 <!-- <WebcamSegmenter /> -->
-<WebcamPoseLandmarker />
+<!-- <WebcamPoseLandmarker /> -->
+<SegTest />

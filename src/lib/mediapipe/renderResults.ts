@@ -45,6 +45,7 @@ export const renderCategoryMask = (categoryMask: MPMask, canvasCtx: CanvasRender
 }
 
 export const renderConfidenceMask = (confidenceMasks: MPMask[], canvasCtx: CanvasRenderingContext2D, videoEl: HTMLVideoElement, cutoff: number) => {
+  if (confidenceMasks[0] === undefined) return;
   let imageData = canvasCtx.getImageData(0, 0, videoEl.videoWidth, videoEl.videoHeight).data;
   if (imageData === undefined) return;
  

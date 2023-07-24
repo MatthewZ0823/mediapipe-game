@@ -5,7 +5,7 @@
 		FilesetResolver,
 		type ImageSegmenterResult
 	} from '@mediapipe/tasks-vision';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let videoEl: HTMLVideoElement;
 	let canvasEl: HTMLCanvasElement;
@@ -18,10 +18,6 @@
 	onMount(() => {
 		canvasCtx = canvasEl.getContext('2d');
 		createImageSegmenter();
-	});
-
-	onDestroy(() => {
-		videoEl.removeEventListener('loadeddata', predictWebcam);
 	});
 
 	const createImageSegmenter = async () => {
@@ -97,7 +93,6 @@
 		webcamStream = await navigator.mediaDevices.getUserMedia(mediaConfig);
 		videoEl.srcObject = webcamStream;
 		videoEl.play();
-		videoEl.addEventListener('loadeddata', predictWebcam);
 	}
 
 	const disableCam = () => {
@@ -110,7 +105,7 @@
 <button on:click={handleToggleCamera}>Toggle Camera</button>
 <input type="range" min="0" max="1" step="0.01" bind:value={cutoffVal} />
 <div class="webcam">
-	<video muted bind:this={videoEl} />
+	<video muted on:loadeddata={predictWebcam} bind:this={videoEl} />
 	<canvas width="1280px" height="720px" bind:this={canvasEl} />
 </div>
 
