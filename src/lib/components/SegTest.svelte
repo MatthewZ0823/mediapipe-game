@@ -28,7 +28,7 @@
 		);
 		poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
 			baseOptions: {
-				modelAssetPath: 'src/lib/models/pose_landmarker_lite.task',
+				modelAssetPath: 'src/lib/models/pose_landmarker_lite.task'
 				// delegate: 'GPU'
 			},
 			runningMode: 'VIDEO',
