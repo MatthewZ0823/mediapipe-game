@@ -1,7 +1,13 @@
 <script lang="ts">
-	import { DrawingUtils, PoseLandmarker, type PoseLandmarkerResult } from '@mediapipe/tasks-vision';
+	import {
+		DrawingUtils,
+		PoseLandmarker,
+		type NormalizedLandmark,
+		type PoseLandmarkerResult
+	} from '@mediapipe/tasks-vision';
 	import { onMount } from 'svelte';
 	import SilhouetteImage from '$lib/assets/silhouettes/silhouette-1-edit.png';
+	import cutoutLandmarks from '$lib/assets/cutout-landmarks/all_pose_landmarks.json';
 
 	export let videoSource: MediaStream;
 	export let landmarkerResult: PoseLandmarkerResult;
@@ -14,7 +20,11 @@
 	let webcamContainer: HTMLDivElement;
 	let vidWidth: number, vidHeight: number;
 
-	$: if (landmarkerResult) drawConnectors();
+	$: if (landmarkerResult) {
+		clearCanvas();
+		drawWebcamConnectors();
+		drawCutoutConnectors();
+	}
 	$: if (videoEl && videoSource) {
 		videoEl.srcObject = videoSource;
 		updateWebcamSize();
@@ -35,18 +45,27 @@
 		updateWebcamSize();
 	});
 
-	const drawConnectors = () => {
+	const clearCanvas = () => {
+		landmarkCanvasCtx?.clearRect(0, 0, landmarkCanvasEl.width, landmarkCanvasEl.height);
+	};
+
+	const drawConnectors = (landmark: NormalizedLandmark[]) => {
 		if (landmarkCanvasCtx === null || landmarkCanvasCtx === undefined) return;
 
 		landmarkCanvasCtx.save();
-		landmarkCanvasCtx.clearRect(0, 0, landmarkCanvasEl.width, landmarkCanvasEl.height);
-		for (const landmark of landmarkerResult.landmarks) {
-			if (drawingUtils !== undefined) {
-				drawingUtils.drawLandmarks(landmark);
-				drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
-			}
+		if (drawingUtils !== undefined) {
+			drawingUtils.drawLandmarks(landmark);
+			drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
 		}
 		landmarkCanvasCtx.restore();
+	};
+
+	const drawWebcamConnectors = () => {
+		drawConnectors(landmarkerResult.landmarks[0]);
+	};
+
+	const drawCutoutConnectors = () => {
+		drawConnectors(cutoutLandmarks[0]);
 	};
 
 	const updateWebcamSize = () => {
