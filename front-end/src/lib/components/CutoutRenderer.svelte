@@ -48,11 +48,11 @@
 	};
 
 	const drawWebcamConnectors = () => {
-		landmarkRenderer?.drawConnectors(landmarkerResult.landmarks[0]);
+		landmarkRenderer?.drawConnectorsLite(landmarkerResult.landmarks[0]);
 	};
 
 	const drawCutoutConnectors = () => {
-		landmarkRenderer?.drawConnectors(cutoutLandmarks[0]);
+		landmarkRenderer?.drawConnectorsLite(cutoutLandmarks[0]);
 	};
 
 	const updateWebcamSize = () => {
