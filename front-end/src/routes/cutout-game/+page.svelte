@@ -10,7 +10,6 @@
 	let webcamStream: MediaStream;
 	let webcamLandmarkerResult: PoseLandmarkerResult;
 	let webcamLandmarker: WebcamLandmarker;
-	let width = 100, height = 100;
 
 	onMount(async () => {
 		webcamStream = await navigator.mediaDevices.getUserMedia({
@@ -29,6 +28,4 @@
 <!-- <WebcamSegmenter /> -->
 <!-- <WebcamPoseLandmarker /> -->
 <!-- <SegTest /> -->
-<input type='range' max={1000} min={0} bind:value={width} />
-<input type='range' max={1000} min={0} bind:value={height} />
-<CutoutRenderer { width } { height } videoSource={webcamStream} landmarkerResult={webcamLandmarkerResult} />
+<CutoutRenderer width={400} height={400} videoSource={webcamStream} landmarkerResult={webcamLandmarkerResult} />
