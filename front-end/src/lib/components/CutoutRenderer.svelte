@@ -1,13 +1,9 @@
 <script lang="ts">
-	import {
-		DrawingUtils,
-		PoseLandmarker,
-		type NormalizedLandmark,
-		type PoseLandmarkerResult
-	} from '@mediapipe/tasks-vision';
 	import { onMount } from 'svelte';
 	import SilhouetteImage from '$lib/assets/silhouettes/silhouette-1-edit.png';
 	import cutoutLandmarks from '$lib/assets/cutout-landmarks/all_pose_landmarks.json';
+	import { LandmarkRenderer } from '$lib/mediapipe/landmarkRenderer';
+	import type { PoseLandmarkerResult } from '@mediapipe/tasks-vision';
 
 	export let videoSource: MediaStream;
 	export let landmarkerResult: PoseLandmarkerResult;
@@ -16,7 +12,7 @@
 	let videoEl: HTMLVideoElement;
 	let landmarkCanvasEl: HTMLCanvasElement;
 	let landmarkCanvasCtx: CanvasRenderingContext2D | null;
-	let drawingUtils: DrawingUtils;
+	let landmarkRenderer: LandmarkRenderer | undefined;
 	let webcamContainer: HTMLDivElement;
 	let vidWidth: number, vidHeight: number;
 
@@ -38,7 +34,9 @@
 	onMount(async () => {
 		landmarkCanvasCtx = landmarkCanvasEl.getContext('2d');
 		if (landmarkCanvasCtx !== null) {
-			drawingUtils = new DrawingUtils(landmarkCanvasCtx);
+			landmarkRenderer = new LandmarkRenderer(landmarkCanvasCtx);
+		} else {
+			console.error('Could not get canvas context');
 		}
 
 		videoEl.srcObject = videoSource;
@@ -49,23 +47,12 @@
 		landmarkCanvasCtx?.clearRect(0, 0, landmarkCanvasEl.width, landmarkCanvasEl.height);
 	};
 
-	const drawConnectors = (landmark: NormalizedLandmark[]) => {
-		if (landmarkCanvasCtx === null || landmarkCanvasCtx === undefined) return;
-
-		landmarkCanvasCtx.save();
-		if (drawingUtils !== undefined) {
-			drawingUtils.drawLandmarks(landmark);
-			drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
-		}
-		landmarkCanvasCtx.restore();
-	};
-
 	const drawWebcamConnectors = () => {
-		drawConnectors(landmarkerResult.landmarks[0]);
+		landmarkRenderer?.drawConnectors(landmarkerResult.landmarks[0]);
 	};
 
 	const drawCutoutConnectors = () => {
-		drawConnectors(cutoutLandmarks[0]);
+		landmarkRenderer?.drawConnectors(cutoutLandmarks[0]);
 	};
 
 	const updateWebcamSize = () => {
