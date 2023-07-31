@@ -14,7 +14,6 @@
 	let landmarkCanvasCtx: CanvasRenderingContext2D | null;
 	let landmarkRenderer: LandmarkRenderer | undefined;
 	let webcamContainer: HTMLDivElement;
-	let vidWidth: number, vidHeight: number;
 
 	$: if (landmarkerResult) {
 		clearCanvas();
@@ -52,7 +51,23 @@
 	};
 
 	const drawCutoutConnectors = () => {
-		landmarkRenderer?.drawConnectorsLite(cutoutLandmarks[0]);
+		if (landmarkCanvasEl === undefined) return;
+
+		// First scale the landmarks, since the canvas size might be different from the webcam container
+		const scaleFactor = {
+			x: width / landmarkCanvasEl.width,
+			y: height / landmarkCanvasEl.height
+		};
+
+		const scaledLandmarks = cutoutLandmarks[0].map((landmark) => {
+			return {
+				...landmark,
+				x: (landmark.x - 0.5) * scaleFactor.x + 0.5,
+				y: (landmark.y - 0.5) * scaleFactor.y + 0.5
+			};
+		});
+
+		landmarkRenderer?.drawConnectorsLite(scaledLandmarks);
 	};
 
 	const updateWebcamSize = () => {
@@ -87,5 +102,5 @@
 <div class="relative flex items-center justify-center overflow-hidden" bind:this={webcamContainer}>
 	<video autoplay muted bind:this={videoEl} class="max-w-none" />
 	<img class="absolute opacity-25" src={SilhouetteImage} alt="Silhouette" />
-	<canvas class="absolute" width={vidWidth} height={vidHeight} bind:this={landmarkCanvasEl} />
+	<canvas class="absolute" bind:this={landmarkCanvasEl} />
 </div>
