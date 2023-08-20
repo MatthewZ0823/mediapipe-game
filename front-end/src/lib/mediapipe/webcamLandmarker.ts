@@ -22,9 +22,7 @@ export class WebcamLandmarker {
     this.videoEl = document.createElement('video');
 
     this.predictWebcam = this.predictWebcam.bind(this);
-
     this.createPoseLandmarker();
-
     this.poseCallback = poseCallback;
   }
 
@@ -55,6 +53,7 @@ export class WebcamLandmarker {
       this.lastVideoTime = this.videoEl.currentTime;
 
       if (this.poseLandmarker !== undefined) {
+        // TODO: Make website responsive when loading landmarks for the first time
         this.poseLandmarker.detectForVideo(this.videoEl, startTimeMs, this.poseCallback);
       } else {
         console.error('Pose Landmarker not yet initialized');

@@ -15,6 +15,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/three": "^0.155.0",
 		"autoprefixer": "^10.4.14",
 		"daisyui": "^3.3.1",
 		"postcss": "^8.4.27",
@@ -31,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@mediapipe/tasks-vision": "^0.10.2"
+		"@mediapipe/tasks-vision": "^0.10.2",
+		"three": "^0.155.0"
 	}
 }
